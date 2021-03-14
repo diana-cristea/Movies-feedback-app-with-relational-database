@@ -17,46 +17,23 @@ namespace ProiectBD
         {
             InitializeComponent();
         }
-        //Pagina de login
-        //functie pentru apasarea butonului de conectare
+        // Login page
+         // function for pressing the login button
         private void button1_Click(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-MFIROOJ\SQLEXPRESS;Initial Catalog=MovieFeedbackandClassif;Integrated Security=True");
-            //daca sunt introduse corect username-ul si parola, atunci se deschide pagina principala
+            // if the username and password are entered correctly, then the main page opens
             if (textBox1.Text == "Admin123" && textBox2.Text == "bazadedate")
             {
                 this.Hide();
                 Main ss = new Main();
                 ss.Show();
             }
-            //altfel, apare un mesaj de eroare
+            // otherwise, an error message appears
             else MessageBox.Show("Username sau parola gresita");
             con.Close();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
+      
     }
 }
