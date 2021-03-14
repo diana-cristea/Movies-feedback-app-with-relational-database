@@ -16,32 +16,17 @@ namespace ProiectBD
             InitializeComponent();
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
            
             SqlConnection connection = new SqlConnection("Data Source=DESKTOP-MFIROOJ\\SQLEXPRESS;Initial Catalog=MovieFeedbackandClassif;Integrated Security=True");
             String[] valuesList = new string[30];
             connection.Open();
-            //Sunt selectate toate titlurile filmelor
+            // All movie titles are selected
             SqlCommand command = new SqlCommand("Select Titlu From Filme", connection);
             SqlDataReader dataReader = command.ExecuteReader();
             int i = 0;
-            //Se creeaza un vector cu aceste valori
+            // Create a vector with these values
             while (dataReader.Read())
             {
                 valuesList[i]=dataReader[0].ToString();
@@ -49,11 +34,11 @@ namespace ProiectBD
             }
             connection.Close();
             int ok = 0;
-            //Se cauta daca exista deja un film cu titlul introdus de noi
+            // Check if there is already a movie with the title introduced in the database
             for (int j = 0; j < 30; j++)
                 if (Titlu.Text == valuesList[j]) ok = 1;
-            if (ok == 1) MessageBox.Show("Filmul exista deja in baza de date"); //daca exista, se afiseaza mesaj de atentionare
-            //Atfel, filmul se introduce in baza de date
+            if (ok == 1) MessageBox.Show("Filmul exista deja in baza de date"); // if the database already has a movie with that name, a warning message is displayed
+            // Thus, the movie is entered in the database
             else
             {
                 SqlConnection sc = new SqlConnection();
@@ -70,8 +55,8 @@ namespace ProiectBD
                 com.Parameters.AddWithValue("@descriere", Descriere.Text);
                 com.Parameters.AddWithValue("@regizor", Regizor.Text);
                 com.ExecuteNonQuery();
-                sc.Close(); //se inchide conexiunea
-                //Se sterg datele din casetele text
+                sc.Close(); // the connection closes
+               // Delete data from text boxes
                 Titlu.Text = null;
                 An.Text = null;
                 Durata.Text = null;
@@ -82,14 +67,5 @@ namespace ProiectBD
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
