@@ -20,24 +20,24 @@ namespace ProiectBD
         {
 
         }
-        //functie ce completeaza numele filmului la care se va introduce un review in caseta text destinata 
+        //function that completes the name of the movie for which a review will be entered in the intended text box 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            film.Text = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(); //caseta text preia titlul complet al filmului selectat
+            film.Text = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(); // the text box takes over the full title of the selected movie
             SqlConnection sc = new SqlConnection();
             SqlCommand com = new SqlCommand();
             sc.ConnectionString = ("Data Source=DESKTOP-MFIROOJ\\SQLEXPRESS;Initial Catalog=MovieFeedbackandClassif;Integrated Security=True");
             sc.Open();
             com.Connection = sc;
-            //comanda sql pentru selectarea utilizatorilor ce NU au introdus inca un review la filmul selectat
+            // sql command to select users who have NOT yet entered a review for the selected movie
             com.CommandText = @"Select Username From Reviewer 
             where ReviewerID NOT IN( Select Distinct ReviewerID from Rating Where FilmID=(Select FilmID from Filme Where Titlu=@film))";
-            com.Parameters.AddWithValue("@film", film.Text); //se preia numele filmului din caseta
+            com.Parameters.AddWithValue("@film", film.Text); // take the name of the movie from the text box 
             com.ExecuteNonQuery();
             SqlDataAdapter sdr = new SqlDataAdapter(com);
             DataTable dt = new DataTable();
             sdr.Fill(dt);
-            reviewer.DataSource = dt; //lista va contine doar username-ul utilizatorilor ce pot introduce un review la acel film
+            reviewer.DataSource = dt; // the list will only contain the username of the users who can enter a review for that movie
             reviewer.DisplayMember = "ID";
             reviewer.ValueMember = "Username";
             sc.Close();
@@ -54,7 +54,7 @@ namespace ProiectBD
             dataGridView1.DataSource = dt;
             con.Close();
         }
-        //functie pentru afisarea filmelor ce contin o portiune din numele filmului introdusa de utilizator
+        // function for displaying movies that contain a portion of the movie name entered by the user
         private void film_TextChanged(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-MFIROOJ\SQLEXPRESS;Initial Catalog=MovieFeedbackandClassif;Integrated Security=True");
@@ -67,7 +67,7 @@ namespace ProiectBD
             dataGridView1.DataSource = dt;
             con.Close();
         }
-        //functie ce se executa la apasarea butonului de adaugare review
+       // function that is executed when pressing the add review button
         private void button1_Click(object sender, EventArgs e)
         {
             SqlConnection sc = new SqlConnection();
@@ -75,9 +75,9 @@ namespace ProiectBD
             sc.ConnectionString = ("Data Source=DESKTOP-MFIROOJ\\SQLEXPRESS;Initial Catalog=MovieFeedbackandClassif;Integrated Security=True");
             sc.Open();
             com.Connection = sc;
-            //comanda sql pentru adaugarea unei inregistrari in tabela de review-uri
+            // sql command to add a record to the review table
             com.CommandText = @"Insert into Rating(FilmID, ReviewerID, Nr_stele, Comentariu) Values ((Select FilmID From Filme Where Titlu=@film),(Select ReviewerID From Reviewer where Username=@reviewer),@nrstele,@comentariu)";
-            //sunt preluate valorile din casetele text pentru a fi folosite in interogare
+            // values are taken from the text boxes to be used in the query
             com.Parameters.AddWithValue("@film", film.Text); 
             com.Parameters.AddWithValue("@reviewer", reviewer.Text);
             com.Parameters.AddWithValue("@nrstele", Stele.Text);
@@ -89,7 +89,7 @@ namespace ProiectBD
             sc1.ConnectionString = ("Data Source=DESKTOP-MFIROOJ\\SQLEXPRESS;Initial Catalog=MovieFeedbackandClassif;Integrated Security=True");
             sc1.Open();
             com1.Connection = sc1;
-            //comanda sql pentru actualizarea rating-ului unui film dupa ce a fost adaugat un nou review
+            // command sql to update a movie's rating after a new review has been added
             com1.CommandText = @"Update Filme SET Rating_general=(Select Round(AVG(Cast(Rating.Nr_stele as float)),2)
 				  From Rating 
 				  WHERE Filme.FilmID=Rating.FilmID
@@ -98,8 +98,8 @@ namespace ProiectBD
             com1.Parameters.AddWithValue("@film1", film.Text);
             com1.ExecuteNonQuery();
             sc1.Close();
-            DisplayData(); //Se afiseaza valorile actualizate pentru nota filmului
-            //Se sterge textul din casetele text
+            DisplayData(); // The updated values for the movie note are displayed
+            // Delete the text from the text boxes
             film.Text = null;
             reviewer.Text = null;
             Stele.Text = null;
